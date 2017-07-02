@@ -1,4 +1,4 @@
-package com.dev.bruno.learning.test.a3;
+package com.dev.bruno.learning.test.a4;
 
 public class MapColorsSolution {
 	

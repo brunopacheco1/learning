@@ -47,7 +47,7 @@ public class FindRunningMedianSolution {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Scanner in = new Scanner(Paths.get("/home/casa/dev/testes_amazon/input_median.txt"));
+		Scanner in = new Scanner(Paths.get("input/input_median.txt"));
 
 		int size = in.nextInt();
 
