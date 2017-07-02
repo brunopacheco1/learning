@@ -1,4 +1,4 @@
-package com.dev.bruno.learning.test.a1;
+package com.dev.bruno.learning.test.a2;
 
 public class BinPackingSolution {
 
