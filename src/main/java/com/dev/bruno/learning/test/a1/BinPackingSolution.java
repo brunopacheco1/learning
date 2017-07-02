@@ -35,7 +35,7 @@ public class BinPackingSolution {
 		return numbers;
 	}
 
-	public static int minimumBins(int binCapacity, int[] weights, boolean sorted, boolean reversed) {
+	public static int firstFitSolution(int binCapacity, int[] weights, boolean sorted, boolean reversed) {
 		
 		if(sorted) {
 			weights = countingSort(weights);
@@ -80,18 +80,18 @@ public class BinPackingSolution {
 		int binCapacity = 10;
 
 		//First fit
-		System.out.println("Sorted: false - Reverse: false - Result: " + minimumBins(binCapacity, new int[] { 4, 8, 1, 4, 2, 1 }, false, false));
+		System.out.println("Sorted: false - Reverse: false - Result: " + firstFitSolution(binCapacity, new int[] { 4, 8, 1, 4, 2, 1 }, false, false));
 
 		//First fit
-		System.out.println("Sorted: false - Reverse: false - Result: " + minimumBins(binCapacity, new int[] { 9, 8, 2, 2, 5, 4 }, false, false));
+		System.out.println("Sorted: false - Reverse: false - Result: " + firstFitSolution(binCapacity, new int[] { 9, 8, 2, 2, 5, 4 }, false, false));
 
 		//First fit
-		System.out.println("Sorted: false - Reverse: false - Result: " + minimumBins(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, false, false));
+		System.out.println("Sorted: false - Reverse: false - Result: " + firstFitSolution(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, false, false));
 		
 		//First fit increasing
-		System.out.println("Sorted: true - Reverse: false - Result: " + minimumBins(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, true, false));
+		System.out.println("Sorted: true - Reverse: false - Result: " + firstFitSolution(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, true, false));
 		
 		//First fit decreasing
-		System.out.println("Sorted: true - Reverse: true - Result: " + minimumBins(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, true, true));
+		System.out.println("Sorted: true - Reverse: true - Result: " + firstFitSolution(binCapacity, new int[] { 2, 5, 4, 7, 1, 3, 8 }, true, true));
 	}
 }

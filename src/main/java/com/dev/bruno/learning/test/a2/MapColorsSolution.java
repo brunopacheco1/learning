@@ -1,6 +1,29 @@
 package com.dev.bruno.learning.test.a2;
 
 public class MapColorsSolution {
+	
+	//Try to find out a better solution
+	private static void clearNext(int [][] A, int currentColor, int currentN, int currentM) {
+		int matrixN = A.length;
+		int matrixM = A[0].length;
+		
+		if(currentN < 0 || currentN >= matrixN || currentM < 0 || currentM >= matrixM) {
+			return;
+		}
+		
+		int color = A[currentN][currentM];
+		
+		if(color == -9 || color != currentColor) {
+			return;
+		}
+		
+		A[currentN][currentM] = -9;
+		
+		clearNext(A, currentColor, currentN, currentM - 1);
+		clearNext(A, currentColor, currentN, currentM + 1);
+		clearNext(A, currentColor, currentN - 1, currentM);
+		clearNext(A, currentColor, currentN + 1, currentM);
+	}
 
 	public static int solution(int[][] A) {
 		int countries = 0;
@@ -13,52 +36,7 @@ public class MapColorsSolution {
 				
 				if(color != -9) {
 					countries++;
-				} else {
-					continue;
-				}
-				
-				A[n][m] = -9;
-				
-				if(n > 0 && n < A.length - 1 && m > 0 && m < row.length - 1) {
-					int nextColor = A[n - 1][m];
-					if(nextColor == color) {
-						A[n - 1][m] = -9;
-					}
-					
-					nextColor = A[n + 1][m];
-					if(nextColor == color) {
-						A[n + 1][m] = -9;
-					}
-					
-					nextColor = A[n][m - 1];
-					if(nextColor == color) {
-						A[n][m - 1] = -9;
-					}
-					
-					nextColor = A[n][m + 1];
-					if(nextColor == color) {
-						A[n][m + 1] = -9;
-					}
-				} else if((n == 0 || n == A.length - 1) && m > 0 && m < row.length - 1) {
-					int nextColor = A[n][m - 1];
-					if(nextColor == color) {
-						A[n][m - 1] = -9;
-					}
-					
-					nextColor = A[n][m + 1];
-					if(nextColor == color) {
-						A[n][m + 1] = -9;
-					}
-				} else if(n > 0 && n < A.length - 1 && (m == 0 || m == row.length - 1)) {
-					int nextColor = A[n - 1][m];
-					if(nextColor == color) {
-						A[n - 1][m] = -9;
-					}
-					
-					nextColor = A[n + 1][m];
-					if(nextColor == color) {
-						A[n + 1][m] = -9;
-					}
+					clearNext(A, color, n, m);
 				}
 			}
 		}
