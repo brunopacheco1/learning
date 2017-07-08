@@ -1,5 +1,9 @@
 package com.dev.bruno.learning.test.a1;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
 /*
 Amazon wants to implement a new backup system, in which files are stored into data tapes.
  
@@ -24,28 +28,113 @@ Example:
 */
 public class BackupSystem {
 
-	public interface Batch {
-	    int[] getFileSizes();
-	    int getTapeSize();
+	private static class Batch {
+	    int[] fileSizes;
+	    int tapeSize;
+	    
+	    public Batch(int [] fileSizes, int tapeSize) {
+	    	this.fileSizes = fileSizes;
+	    	this.tapeSize = tapeSize;
+	    }
+	    
+	    public int[] getFileSizes() {
+			return fileSizes;
+		}
+	    
+	    public int getTapeSize() {
+			return tapeSize;
+		}
+	}
+	
+	public static void reverse(int[] data) {
+		for (int left = 0, right = data.length - 1; left < right; left++, right--) {
+			int temp = data[left];
+			data[left] = data[right];
+			data[right] = temp;
+		}
 	}
 
-	public int getMinimumTapeCount(final Batch batch) {
-		int i = 0;
-		int result = 0;
-		
-		while(i < batch.getFileSizes().length - 1) {
-			
-			if(batch.getFileSizes()[i] + batch.getFileSizes()[i + 1] <= batch.getTapeSize()) {
-				result++;
-				
-				i += 2;
-			} else {
-				result++;
-				
-				i++;
+	public static int[] countingSort(int[] numbers) {
+		int max = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] > max)
+				max = numbers[i];
+		}
+
+		int[] sortedNumbers = new int[max + 1];
+
+		for (int i = 0; i < numbers.length; i++) {
+			sortedNumbers[numbers[i]]++;
+		}
+
+		int insertPosition = 0;
+
+		for (int i = 0; i <= max; i++) {
+			for (int j = 0; j < sortedNumbers[i]; j++) {
+				numbers[insertPosition] = i;
+				insertPosition++;
 			}
 		}
+
+		return numbers;
+	}
+
+	public static int getMinimumTapeCount(final Batch batch) {
+		int [] fileSizes = batch.getFileSizes();
 		
-		return result;
+		fileSizes = countingSort(fileSizes);
+		
+		reverse(fileSizes);
+		
+		// The maximum of bins is the length of items array
+		int[] tapes = new int[fileSizes.length];
+		int trips = 0;
+
+		for (int weightIndex = 0; weightIndex < fileSizes.length; weightIndex++) {
+			int sizeCurrentIndex = 0;
+
+			for (int sizeIndex = 0; sizeIndex <= sizeCurrentIndex; sizeIndex++) {
+				int weight = tapes[sizeIndex] + fileSizes[weightIndex];
+
+				if (weight <= batch.getTapeSize()) {
+					tapes[sizeIndex] = weight;
+
+					break;
+				} else {
+					sizeCurrentIndex++;
+				}
+			}
+		}
+
+		for (int index = 0; index < tapes.length; index++) {
+			if (tapes[index] > 0) {
+				trips++;
+			} else {
+				break;
+			}
+		}
+
+		return trips;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Scanner in = new Scanner(Paths.get("inputs/input_delivery.txt"));
+
+		int tapeSize = in.nextInt();
+		int numberOfPackages = in.nextInt();
+
+		int[] fileSizes = new int[numberOfPackages];
+
+		for (int i = 0; i < numberOfPackages; i++) {
+			fileSizes[i] = in.nextInt();
+		}
+		
+		Batch batch = new Batch(fileSizes, tapeSize);
+
+		int minimumTapeCount = getMinimumTapeCount(batch);
+
+		System.out.println(minimumTapeCount);
+		
+		in.close();
 	}
 }

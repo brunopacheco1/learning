@@ -3,10 +3,10 @@ package com.dev.bruno.learning.test.a3;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.util.TreeMap;
 
 public class DroneSolution {
 
@@ -30,19 +30,37 @@ public class DroneSolution {
     }
 	
 	static List<Integer> greatestFlightRangeDrones(Integer numberOfRequiredDrones, List<Drone> drones, List<Integer> inMaintenanceDrones) {
-        // TODO: implement this function
-        drones = drones.parallelStream().filter(drone -> !inMaintenanceDrones.contains(drone.getId())).collect(Collectors.toList());
+        List<Integer> result = new ArrayList<>();
         
-        drones = drones.parallelStream().sorted(Comparator.comparing(Drone::getFlightRange)).collect(Collectors.toList());
+        Map<Integer, List<Integer>> dronesByFlightRange = new TreeMap<>();
         
-        List<Integer> ids = new ArrayList<>();
+        drones.forEach(drone -> {
+        	if(!inMaintenanceDrones.contains(drone.getId())) {
+        		int flightRange = drone.getFlightRange();
+        		
+	        	if(!dronesByFlightRange.containsKey(flightRange)) {
+	        		dronesByFlightRange.put(flightRange, new ArrayList<>());
+	        	}
+	        	
+	        	dronesByFlightRange.get(flightRange).add(drone.getId());
+        	}
+        });
         
-        int start = Math.max(0, drones.size() - numberOfRequiredDrones); 
-        for(int index = drones.size() - 1; index >= start; index--) {
-        	ids.add(drones.get(index).getId());
+        List<Integer> keys = new ArrayList<>(dronesByFlightRange.keySet());
+        
+        keys : for(int index = keys.size() - 1; index >= 0; index--) {
+        	List<Integer> ids = dronesByFlightRange.get(keys.get(index));
+        	
+        	for(Integer id : ids) {
+        		result.add(id);
+        		
+        		if(numberOfRequiredDrones == result.size()) {
+        			break keys;
+        		}
+        	}
         }
         
-        return ids;
+        return result;
     }
 
 	 // The first line of the input contains three decimal integers separated by space: total number of drones ('D'), number of drones to be selected ('G') and number of drones in maintenance ('M').
@@ -74,5 +92,6 @@ public class DroneSolution {
             System.out.println(greatestFlightRangeDrones.get(i));
         }
 
+        in.close();
     }
 }

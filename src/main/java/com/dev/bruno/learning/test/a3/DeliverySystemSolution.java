@@ -6,30 +6,72 @@ import java.util.Scanner;
 
 public class DeliverySystemSolution {
 
-	static int minimumNumberOfTrips(int tripMaxWeight, int[] packagesWeight) {
-		int trips = 1;
-		int n = packagesWeight.length;
+	public static void reverse(int[] data) {
+		for (int left = 0, right = data.length - 1; left < right; left++, right--) {
+			int temp = data[left];
+			data[left] = data[right];
+			data[right] = temp;
+		}
+	}
 
-		int[] remainingBins = new int[n];
+	public static int[] countingSort(int[] numbers) {
+		int max = numbers[0];
+		for (int i = 1; i < numbers.length; i++) {
+			if (numbers[i] > max)
+				max = numbers[i];
+		}
 
-		for (int i = 0; i < n; i++) {
+		int[] sortedNumbers = new int[max + 1];
 
-			int min = tripMaxWeight + 1, bi = 0;
+		for (int i = 0; i < numbers.length; i++) {
+			sortedNumbers[numbers[i]]++;
+		}
 
-			for (int j = 0; j < trips; j++) {
-				if (remainingBins[j] >= packagesWeight[i] && remainingBins[j] - packagesWeight[i] < min) {
-					bi = j;
-					min = remainingBins[j] - packagesWeight[i];
-				}
-			}
+		int insertPosition = 0;
 
-			if (min == tripMaxWeight + 1) {
-				remainingBins[trips] = tripMaxWeight - packagesWeight[i];
-				trips++;
-			} else {
-				remainingBins[bi] -= packagesWeight[i];
+		for (int i = 0; i <= max; i++) {
+			for (int j = 0; j < sortedNumbers[i]; j++) {
+				numbers[insertPosition] = i;
+				insertPosition++;
 			}
 		}
+
+		return numbers;
+	}
+
+	static int minimumNumberOfTrips(int tripMaxWeight, int[] packagesWeight) {
+		packagesWeight = countingSort(packagesWeight);
+	
+		reverse(packagesWeight);
+		
+		// The maximum of bins is the length of items array
+		int[] bins = new int[packagesWeight.length];
+		int trips = 0;
+
+		for (int weightIndex = 0; weightIndex < packagesWeight.length; weightIndex++) {
+			int binCurrentIndex = 0;
+
+			for (int binIndex = 0; binIndex <= binCurrentIndex; binIndex++) {
+				int weight = bins[binIndex] + packagesWeight[weightIndex];
+
+				if (weight <= tripMaxWeight) {
+					bins[binIndex] = weight;
+
+					break;
+				} else {
+					binCurrentIndex++;
+				}
+			}
+		}
+
+		for (int index = 0; index < bins.length; index++) {
+			if (bins[index] > 0) {
+				trips++;
+			} else {
+				break;
+			}
+		}
+
 		return trips;
 	}
 
@@ -48,5 +90,7 @@ public class DeliverySystemSolution {
 		int minimumNumberOfTrips = minimumNumberOfTrips(tripMaxWeight, packagesWeight);
 
 		System.out.println(minimumNumberOfTrips);
+		
+		in.close();
 	}
 }
