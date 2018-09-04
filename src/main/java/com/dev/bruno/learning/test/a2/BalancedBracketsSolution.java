@@ -6,26 +6,25 @@ import java.util.Stack;
 
 public class BalancedBracketsSolution {
 
-	public static boolean balancedBrackets(String sample) {
-		Stack<Character> bracketsStack = new Stack<Character>();
+	private static boolean balancedBrackets(String sample) {
+		Stack<Character> bracketsStack = new Stack<>();
 		
 		for(Character c : sample.toCharArray()) {
-			if(c == '[' || c == '(' || c == '{') {
-				bracketsStack.push(c);
-			} else if(c == ']' && (bracketsStack.isEmpty() || bracketsStack.pop() != '[')) {
-               	return false;
-            } else if(c == ')' && (bracketsStack.isEmpty() || bracketsStack.pop() != '(')) {
-            	return false;
-            } else if(c == '}' && (bracketsStack.isEmpty() || bracketsStack.pop() != '{')) {
-            	return false;
-            }
+			switch (c) {
+				case '[':
+				case '(':
+				case '{': bracketsStack.push(c); break;
+				case ']': if(bracketsStack.isEmpty() || bracketsStack.pop() != '[') return false;
+				case ')': if(bracketsStack.isEmpty() || bracketsStack.pop() != '(') return false;
+				case '}': if(bracketsStack.isEmpty() || bracketsStack.pop() != '{') return false;
+			}
 		}
 
 		return bracketsStack.isEmpty();
 	}
 	
 	public static void main(String[] args) throws Exception {
-		Files.lines(Paths.get("input/input09.txt")).forEach(line -> {
+		Files.lines(Paths.get("./inputs/input09.txt")).forEach(line -> {
 			boolean balanced = balancedBrackets(line);
 			
 			if(balanced) {

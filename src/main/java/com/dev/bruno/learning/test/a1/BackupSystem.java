@@ -118,7 +118,7 @@ public class BackupSystem {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Scanner in = new Scanner(Paths.get("inputs/input_delivery.txt"));
+		Scanner in = new Scanner(Paths.get("./inputs/input_delivery.txt"));
 
 		int tapeSize = in.nextInt();
 		int numberOfPackages = in.nextInt();
