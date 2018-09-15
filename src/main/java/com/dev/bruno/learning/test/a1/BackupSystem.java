@@ -2,7 +2,12 @@ package com.dev.bruno.learning.test.a1;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 Amazon wants to implement a new backup system, in which files are stored into data tapes.
@@ -46,79 +51,28 @@ public class BackupSystem {
 		}
 	}
 	
-	public static void reverse(int[] data) {
-		for (int left = 0, right = data.length - 1; left < right; left++, right--) {
-			int temp = data[left];
-			data[left] = data[right];
-			data[right] = temp;
-		}
-	}
-
-	public static int[] countingSort(int[] numbers) {
-		int max = numbers[0];
-		for (int i = 1; i < numbers.length; i++) {
-			if (numbers[i] > max)
-				max = numbers[i];
-		}
-
-		int[] sortedNumbers = new int[max + 1];
-
-		for (int i = 0; i < numbers.length; i++) {
-			sortedNumbers[numbers[i]]++;
-		}
-
-		int insertPosition = 0;
-
-		for (int i = 0; i <= max; i++) {
-			for (int j = 0; j < sortedNumbers[i]; j++) {
-				numbers[insertPosition] = i;
-				insertPosition++;
-			}
-		}
-
-		return numbers;
-	}
-
 	public static int getMinimumTapeCount(final Batch batch) {
-		int [] fileSizes = batch.getFileSizes();
-		
-		fileSizes = countingSort(fileSizes);
-		
-		reverse(fileSizes);
-		
-		// The maximum of bins is the length of items array
-		int[] tapes = new int[fileSizes.length];
-		int trips = 0;
+        int [] sorted = Arrays.stream(batch.getFileSizes()).sorted().toArray();
+        int [] tapes = new int[sorted.length];
+        int [] tapeFileCounter = new int[sorted.length];
 
-		for (int weightIndex = 0; weightIndex < fileSizes.length; weightIndex++) {
-			int sizeCurrentIndex = 0;
+        for(int i = sorted.length - 1; i >= 0; i--) {
+            for(int tapeIndex = 0; tapeIndex < tapes.length; tapeIndex++) {
+                int sum = tapes[tapeIndex] + sorted[i];
 
-			for (int sizeIndex = 0; sizeIndex <= sizeCurrentIndex; sizeIndex++) {
-				int weight = tapes[sizeIndex] + fileSizes[weightIndex];
+                if(sum <= batch.getTapeSize() && tapeFileCounter[tapeIndex] < 2) {
+                    tapes[tapeIndex] = sum;
+                    tapeFileCounter[tapeIndex] += 1;
+                    break;
+                }
+            }
+        }
 
-				if (weight <= batch.getTapeSize()) {
-					tapes[sizeIndex] = weight;
-
-					break;
-				} else {
-					sizeCurrentIndex++;
-				}
-			}
-		}
-
-		for (int index = 0; index < tapes.length; index++) {
-			if (tapes[index] > 0) {
-				trips++;
-			} else {
-				break;
-			}
-		}
-
-		return trips;
+        return IntStream.of(tapes).filter(tape -> tape > 0).toArray().length;
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Scanner in = new Scanner(Paths.get("./inputs/input_delivery.txt"));
+		Scanner in = new Scanner(Paths.get("inputs/input_delivery.txt"));
 
 		int tapeSize = in.nextInt();
 		int numberOfPackages = in.nextInt();

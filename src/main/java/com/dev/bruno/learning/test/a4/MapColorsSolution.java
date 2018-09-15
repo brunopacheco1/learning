@@ -1,37 +1,29 @@
 package com.dev.bruno.learning.test.a4;
 
 public class MapColorsSolution {
-	
-	//Try to find out a better solution
-	private static void clearNext(int [][] A, int currentColor, int currentN, int currentM) {
-		int matrixN = A.length;
-		int matrixM = A[0].length;
-		
-		if(currentN < 0 || currentN >= matrixN || currentM < 0 || currentM >= matrixM) {
+
+	private static void clearNext(int [][] A, int color, int n, int m) {
+        boolean doesntRespectHeight = n < 0 || n >= A.length;
+        boolean doesntRespectWidth = m < 0 || m >= A[0].length;
+        boolean differentColor = A[n][m] == -9 || A[n][m] != color;
+
+		if(doesntRespectHeight || doesntRespectWidth || differentColor) {
 			return;
 		}
 		
-		int color = A[currentN][currentM];
+		A[n][m] = -9;
 		
-		if(color == -9 || color != currentColor) {
-			return;
-		}
-		
-		A[currentN][currentM] = -9;
-		
-		clearNext(A, currentColor, currentN, currentM - 1);
-		clearNext(A, currentColor, currentN, currentM + 1);
-		clearNext(A, currentColor, currentN - 1, currentM);
-		clearNext(A, currentColor, currentN + 1, currentM);
+		clearNext(A, color, n, m - 1);
+		clearNext(A, color, n, m + 1);
+		clearNext(A, color, n - 1, m);
+		clearNext(A, color, n + 1, m);
 	}
 
 	public static int solution(int[][] A) {
 		int countries = 0;
 		
 		for(int n = 0; n < A.length; n++) {
-			int [] row = A[n];
-			
-			for(int m = 0; m < row.length; m++) {
+			for(int m = 0; m < A[0].length; m++) {
 				int color = A[n][m];
 				
 				if(color != -9) {
@@ -45,6 +37,10 @@ public class MapColorsSolution {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(solution(new int[][] { { 5, 4, 3, 2, 3, 1, 4 }, { 4, 3, 2, 2, 3, 4, 1 }, { 4, 4, 4, 2, 4, 4, 1 } }));
+		System.out.println(solution(new int[][] {
+			{ 5, 4, 3, 2, 3, 1, 4 },
+			{ 4, 3, 2, 2, 3, 4, 1 },
+			{ 4, 4, 4, 2, 4, 4, 1 }
+		}));
 	}
 }
