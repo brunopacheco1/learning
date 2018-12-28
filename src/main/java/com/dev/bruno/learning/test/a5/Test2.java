@@ -2,23 +2,28 @@ package com.dev.bruno.learning.test.a5;
 
 public class Test2 {
 
-    public static int solution(int num, int [] arr) {
+    public static int solution(int num, int[] arr) {
 
-        int gcd = 1;
+        int minValue = Integer.MAX_VALUE;
+        for (int value : arr) if (value < minValue) minValue = value;
 
-        doesntHaveRemainder : while(true) {
-            int tempGCD = gcd + 1;
-            for(int value : arr) if(value % tempGCD != 0) break doesntHaveRemainder;
-            gcd = tempGCD;
+        while (minValue > 1) {
+            boolean hasRemainder = false;
+
+            for (int value : arr) hasRemainder |= value % minValue != 0;
+
+            if (!hasRemainder) break;
+
+            minValue--;
         }
 
-        return gcd;
+        return minValue;
     }
 
     public static void main(String[] args) {
         System.out.println(
                 solution(
-                        5, new int[] {2, 4, 6, 8, 10}
+                        5, new int[]{2, 4, 6, 8, 10}
                 )
         );
     }
