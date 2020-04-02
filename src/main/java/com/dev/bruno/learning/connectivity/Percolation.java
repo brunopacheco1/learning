@@ -3,10 +3,10 @@ package com.dev.bruno.learning.connectivity;
 public class Percolation {
 
   private static final int VIRTUAL_SITES = 2;
-  private int gridSize;
-  private int[] sites;
-  private int[] sizes;
-  private int[] openSites;
+  private final int gridSize;
+  private final int[] sites;
+  private final int[] sizes;
+  private final boolean[] openSites;
   private int openSitesCounter;
 
   public Percolation(int n) {
@@ -16,7 +16,7 @@ public class Percolation {
     int arraySize = (n * n) + VIRTUAL_SITES;
     sites = new int[arraySize];
     sizes = new int[arraySize];
-    openSites = new int[arraySize];
+    openSites = new boolean[arraySize];
     for (int i = 0; i < arraySize; i++)
       sizes[i] = 1;
     for (int i = gridSize + 1; i < arraySize - gridSize - 1; i++)
@@ -27,20 +27,23 @@ public class Percolation {
 
   public void open(int row, int col) {
     int position = arrayPosition(row, col);
-    if (openSites[position] == 0) {
+    if (!openSites[position]) {
       union(position, position - gridSize);
       union(position, position - 1);
       union(position, position + 1);
       union(position, position + gridSize);
-      openSites[position] = 1;
+      openSites[position] = true;
       openSitesCounter++;
     }
   }
 
   private void union(int a, int b) {
-    if (b < 1 || b > sites.length - 2 || (a % gridSize == 1 && b % gridSize == 0)
-        || (b % gridSize == 1 && a % gridSize == 0) || openSites[b] == 0)
+    boolean outOfBounds = b < 1 || b > sites.length - 2;
+    boolean aIsInADiferentRow = (a % gridSize == 1 && b % gridSize == 0);
+    boolean bIsInADiferentRow = (b % gridSize == 1 && a % gridSize == 0);
+    if (outOfBounds || aIsInADiferentRow || bIsInADiferentRow || !openSites[b]) {
       return;
+    }
     int rootA = root(a);
     int rootB = root(b);
     if (rootA == rootB)
@@ -89,8 +92,5 @@ public class Percolation {
       return i;
     sites[i] = sites[sites[i]];
     return root(sites[i]);
-  }
-
-  public static void main(String[] args) {
   }
 }

@@ -6,6 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class PercolationStats {
 
+  private static final double CONFIDENCE_95 = 1.96;
   private final int experimentsCount;
   private final double[] fractions;
 
@@ -24,7 +25,7 @@ public class PercolationStats {
           percolation.open(i, j);
         }
       }
-      final double fraction = percolation.numberOfOpenSites() / (n ^ 2);
+      final double fraction = percolation.numberOfOpenSites() / (n * n);
       fractions[experiment] = fraction;
     }
   }
@@ -38,11 +39,11 @@ public class PercolationStats {
   }
 
   public double confidenceLo() {
-    return mean() - ((1.96 * stddev()) / Math.sqrt(experimentsCount));
+    return mean() - ((CONFIDENCE_95 * stddev()) / Math.sqrt(experimentsCount));
   }
 
   public double confidenceHi() {
-    return mean() + ((1.96 * stddev()) / Math.sqrt(experimentsCount));
+    return mean() + ((CONFIDENCE_95 * stddev()) / Math.sqrt(experimentsCount));
   }
 
   public static void main(final String[] args) {
