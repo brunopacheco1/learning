@@ -59,7 +59,7 @@ public class Percolation {
 
   public boolean isOpen(int row, int col) {
     int position = arrayPosition(row, col);
-    return openSites[position] == 1;
+    return openSites[position];
   }
 
   public boolean isFull(int row, int col) {
