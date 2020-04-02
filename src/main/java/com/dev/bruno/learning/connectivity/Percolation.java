@@ -4,26 +4,30 @@ public class Percolation {
 
   private static final int VIRTUAL_SITES = 2;
   private int gridSize;
-  private int [] sites;
-  private int [] sizes;
-  private int [] openSites;
+  private int[] sites;
+  private int[] sizes;
+  private int[] openSites;
   private int openSitesCounter;
 
   public Percolation(int n) {
-    if(n < 1) throw new IllegalArgumentException();
+    if (n < 1)
+      throw new IllegalArgumentException();
     gridSize = n;
     int arraySize = (n * n) + VIRTUAL_SITES;
     sites = new int[arraySize];
     sizes = new int[arraySize];
     openSites = new int[arraySize];
-    for(int i = 0; i < arraySize; i++) sizes[i] = 1;
-    for(int i = gridSize + 1; i < arraySize - gridSize - 1; i++) sites[i] = i;
-    for(int i = arraySize - gridSize - 1; i < arraySize - 1; i++) sites[i] = arraySize - 1;
+    for (int i = 0; i < arraySize; i++)
+      sizes[i] = 1;
+    for (int i = gridSize + 1; i < arraySize - gridSize - 1; i++)
+      sites[i] = i;
+    for (int i = arraySize - gridSize - 1; i < arraySize; i++)
+      sites[i] = arraySize - 1;
   }
 
   public void open(int row, int col) {
     int position = arrayPosition(row, col);
-    if(openSites[position] == 0) {
+    if (openSites[position] == 0) {
       union(position, position - gridSize);
       union(position, position - 1);
       union(position, position + 1);
@@ -34,11 +38,14 @@ public class Percolation {
   }
 
   private void union(int a, int b) {
-    if(b < 1 || b > sites.length - 2 || a % gridSize == 1 || b % gridSize == 1 || openSites[b] == 0) return;
+    if (b < 1 || b > sites.length - 2 || (a % gridSize == 1 && b % gridSize == 0)
+        || (b % gridSize == 1 && a % gridSize == 0) || openSites[b] == 0)
+      return;
     int rootA = root(a);
     int rootB = root(b);
-    if(rootA == rootB) return;
-    if(sizes[rootA] < sizes[rootB]) {
+    if (rootA == rootB)
+      return;
+    if (sizes[rootA] < sizes[rootB]) {
       sites[rootA] = rootB;
       sizes[rootA] += sizes[rootB];
     } else {
@@ -59,7 +66,7 @@ public class Percolation {
 
   private int arrayPosition(int row, int col) {
     int position = col + (row * gridSize) + 1;
-    if(position < 1 || position > sites.length - 2) {
+    if (position < 1 || position > sites.length - 2) {
       throw new IllegalArgumentException();
     }
     return position;
@@ -78,12 +85,12 @@ public class Percolation {
   }
 
   private int root(int i) {
-    if(sites[i] == i) return i;
+    if (sites[i] == i)
+      return i;
     sites[i] = sites[sites[i]];
     return root(sites[i]);
   }
 
-  public static void main(String[] args){
+  public static void main(String[] args) {
   }
 }
-
