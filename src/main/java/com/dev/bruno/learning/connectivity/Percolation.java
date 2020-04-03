@@ -34,11 +34,15 @@ public class Percolation {
       quickUnionUF.union(position, top);
       if (openSites[position + gridSize])
         quickUnionUF.union(position, position + gridSize);
-    } else if (row == gridSize) {
+    }
+
+    if (row == gridSize) {
       quickUnionUF.union(position, bottom);
       if (openSites[position - gridSize])
         quickUnionUF.union(position, position - gridSize);
-    } else {
+    }
+
+    if (row > 1 && row < gridSize) {
       if (openSites[position + gridSize])
         quickUnionUF.union(position, position + gridSize);
       if (openSites[position - gridSize])
@@ -48,10 +52,14 @@ public class Percolation {
     if (col == 1) {
       if (openSites[position + 1])
         quickUnionUF.union(position, position + 1);
-    } else if (col == gridSize) {
+    }
+
+    if (col == gridSize) {
       if (openSites[position - 1])
         quickUnionUF.union(position, position - 1);
-    } else {
+    }
+
+    if (col > 1 && col < gridSize) {
       if (openSites[position - 1])
         quickUnionUF.union(position, position - 1);
       if (openSites[position + 1])
