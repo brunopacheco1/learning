@@ -33,7 +33,7 @@ public class PercolationVisualizer {
         StdDraw.clear();
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setXscale(-0.05 * n, 1.05 * n);
-        StdDraw.setYscale(-0.05 * n, 1.05 * n);   // leave a border to write text
+        StdDraw.setYscale(-0.05 * n, 1.05 * n); // leave a border to write text
         StdDraw.filledSquare(n / 2.0, n / 2.0, n / 2.0);
 
         // draw n-by-n grid
@@ -43,12 +43,10 @@ public class PercolationVisualizer {
                 if (perc.isFull(row, col)) {
                     StdDraw.setPenColor(StdDraw.BOOK_LIGHT_BLUE);
                     opened++;
-                }
-                else if (perc.isOpen(row, col)) {
+                } else if (perc.isOpen(row, col)) {
                     StdDraw.setPenColor(StdDraw.WHITE);
                     opened++;
-                }
-                else
+                } else
                     StdDraw.setPenColor(StdDraw.BLACK);
                 StdDraw.filledSquare(col - 0.5, n - row + 0.5, 0.45);
             }
@@ -58,14 +56,16 @@ public class PercolationVisualizer {
         StdDraw.setFont(new Font("SansSerif", Font.PLAIN, 12));
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.text(0.25 * n, -0.025 * n, opened + " open sites");
-        if (perc.percolates()) StdDraw.text(0.75 * n, -0.025 * n, "percolates");
-        else StdDraw.text(0.75 * n, -0.025 * n, "does not percolate");
+        if (perc.percolates())
+            StdDraw.text(0.75 * n, -0.025 * n, "percolates");
+        else
+            StdDraw.text(0.75 * n, -0.025 * n, "does not percolate");
 
     }
 
     public static void main(String[] args) {
-        In in = new In(args[0]);      // input file
-        int n = in.readInt();         // n-by-n percolation system
+        In in = new In(args[0]); // input file
+        int n = in.readInt(); // n-by-n percolation system
 
         // turn on animation mode
         StdDraw.enableDoubleBuffering();
@@ -85,4 +85,3 @@ public class PercolationVisualizer {
         }
     }
 }
-

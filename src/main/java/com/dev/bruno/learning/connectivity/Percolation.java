@@ -1,5 +1,6 @@
 package com.dev.bruno.learning.connectivity;
 
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -8,7 +9,7 @@ public class Percolation {
   private final int top;
   private final int bottom;
   private final WeightedQuickUnionUF quickUnionUF;
-  private final byte[] sites;
+  private final boolean[] openSites;
   private int openSitesCounter;
 
   public Percolation(int n) {
@@ -16,7 +17,7 @@ public class Percolation {
       throw new IllegalArgumentException();
     }
     gridSize = n;
-    sites = new byte[n * n + 2];
+    openSites = new boolean[n * n + 2];
     quickUnionUF = new WeightedQuickUnionUF(n * n + 2);
     top = 0;
     bottom = n * n + 1;
@@ -26,13 +27,12 @@ public class Percolation {
     if (isOpen(row, col)) {
       return;
     }
-    
+
     int position = arrayPosition(row, col);
-    sites[position] = 1;
+    openSites[position] = true;
     if (row == 1) {
       quickUnionUF.union(position, top);
       quickUnionUF.union(position, position + gridSize);
-      sites[position] = 2;
     } else if (row == gridSize) {
       quickUnionUF.union(position, bottom);
       quickUnionUF.union(position, position - gridSize);
@@ -60,12 +60,12 @@ public class Percolation {
 
   public boolean isOpen(int row, int col) {
     int position = arrayPosition(row, col);
-    return sites[position] > 0;
+    return openSites[position];
   }
 
   public boolean isFull(int row, int col) {
     int position = arrayPosition(row, col);
-    return sites[position] == 2;
+    return isOpen(row, col) && quickUnionUF.find(position) == quickUnionUF.find(top);
   }
 
   private void isBounds(int row, int col) {
@@ -84,5 +84,18 @@ public class Percolation {
 
   private boolean isConnected(int a, int b) {
     return quickUnionUF.find(a) == quickUnionUF.find(b);
+  }
+
+  public static void main(String[] args) {
+    In in = new In(args[0]); // input file
+    int n = in.readInt(); // n-by-n percolation system
+
+    // repeatedly read in sites to open and draw resulting system
+    Percolation perc = new Percolation(n);
+    while (!in.isEmpty()) {
+      int i = in.readInt();
+      int j = in.readInt();
+      perc.open(i, j);
+    }
   }
 }
