@@ -5,10 +5,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
   private final int gridSize;
-  private int top;
-  private int bottom;
+  private final int top;
+  private final int bottom;
   private final WeightedQuickUnionUF quickUnionUF;
-  private final byte[][] sites;
+  private final byte[] sites;
   private int openSitesCounter;
 
   public Percolation(int n) {
@@ -16,7 +16,7 @@ public class Percolation {
       throw new IllegalArgumentException();
     }
     gridSize = n;
-    sites = new byte[n][n];
+    sites = new byte[n * n + 2];
     quickUnionUF = new WeightedQuickUnionUF(n * n + 2);
     top = 0;
     bottom = n * n + 1;
@@ -27,14 +27,13 @@ public class Percolation {
       return;
     }
     
-    sites[row][col] = 1;
     int position = arrayPosition(row, col);
-    
-    if(row == 0) {
+    sites[position] = 1;
+    if (row == 1) {
       quickUnionUF.union(position, top);
       quickUnionUF.union(position, position + gridSize);
-      sites[row][col] = 2;
-    } else if(row == gridSize - 1) {
+      sites[position] = 2;
+    } else if (row == gridSize) {
       quickUnionUF.union(position, bottom);
       quickUnionUF.union(position, position - gridSize);
     } else {
@@ -42,9 +41,9 @@ public class Percolation {
       quickUnionUF.union(position, position - gridSize);
     }
 
-    if(col == 0) {
+    if (col == 1) {
       quickUnionUF.union(position, position + 1);
-    } else if(col == gridSize - 1) {
+    } else if (col == gridSize) {
       quickUnionUF.union(position, position - 1);
     } else {
       quickUnionUF.union(position, position - 1);
@@ -55,21 +54,22 @@ public class Percolation {
   }
 
   private int arrayPosition(int row, int col) {
-    return col + (row * gridSize) + 1;
+    isBounds(row, col);
+    return (col - 1) + ((row - 1) * gridSize) + 1;
   }
 
   public boolean isOpen(int row, int col) {
-    isBounds(row, col);
-    return sites[row][col] > 0;
+    int position = arrayPosition(row, col);
+    return sites[position] > 0;
   }
 
   public boolean isFull(int row, int col) {
-    isBounds(row, col);
-    return sites[row][col] == 2;
+    int position = arrayPosition(row, col);
+    return sites[position] == 2;
   }
 
   private void isBounds(int row, int col) {
-    if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) {
+    if (row < 1 || row > gridSize || col < 1 || col > gridSize) {
       throw new IllegalArgumentException();
     }
   }

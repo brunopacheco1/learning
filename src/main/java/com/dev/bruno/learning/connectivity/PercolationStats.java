@@ -26,8 +26,8 @@ public class PercolationStats {
     int i, j;
     Percolation percolation = new Percolation(n);
     while (!percolation.percolates()) {
-      i = StdRandom.uniform(n);
-      j = StdRandom.uniform(n);
+      i = StdRandom.uniform(n) + 1;
+      j = StdRandom.uniform(n) + 1;
       if (!percolation.isOpen(i, j)) {
         counter++;
         percolation.open(i, j);
