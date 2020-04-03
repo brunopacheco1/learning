@@ -32,22 +32,30 @@ public class Percolation {
     openSites[position] = true;
     if (row == 1) {
       quickUnionUF.union(position, top);
-      quickUnionUF.union(position, position + gridSize);
+      if (openSites[position + gridSize])
+        quickUnionUF.union(position, position + gridSize);
     } else if (row == gridSize) {
       quickUnionUF.union(position, bottom);
-      quickUnionUF.union(position, position - gridSize);
+      if (openSites[position - gridSize])
+        quickUnionUF.union(position, position - gridSize);
     } else {
-      quickUnionUF.union(position, position + gridSize);
-      quickUnionUF.union(position, position - gridSize);
+      if (openSites[position + gridSize])
+        quickUnionUF.union(position, position + gridSize);
+      if (openSites[position - gridSize])
+        quickUnionUF.union(position, position - gridSize);
     }
 
     if (col == 1) {
-      quickUnionUF.union(position, position + 1);
+      if (openSites[position + 1])
+        quickUnionUF.union(position, position + 1);
     } else if (col == gridSize) {
-      quickUnionUF.union(position, position - 1);
+      if (openSites[position - 1])
+        quickUnionUF.union(position, position - 1);
     } else {
-      quickUnionUF.union(position, position - 1);
-      quickUnionUF.union(position, position + 1);
+      if (openSites[position - 1])
+        quickUnionUF.union(position, position - 1);
+      if (openSites[position + 1])
+        quickUnionUF.union(position, position + 1);
     }
 
     openSitesCounter++;
