@@ -7,43 +7,49 @@ import edu.princeton.cs.algs4.StdOut;
 public class PercolationStats {
 
   private static final double CONFIDENCE_95 = 1.96;
-  private final int experimentsCount;
-  private final double[] fractions;
+  private final int trials;
+  private final double[] treshold;
 
   public PercolationStats(final int n, final int trials) {
-    if (n <= 0 || trials <= 0)
+    if (n <= 0 || trials <= 0) {
       throw new IllegalArgumentException();
-
-    experimentsCount = trials;
-    fractions = new double[experimentsCount];
-    for (int experiment = 0; experiment < experimentsCount; experiment++) {
-      Percolation percolation = new Percolation(n);
-      while (!percolation.percolates()) {
-        final int i = StdRandom.uniform(0, n);
-        final int j = StdRandom.uniform(0, n);
-        if (!percolation.isOpen(i, j)) {
-          percolation.open(i, j);
-        }
-      }
-      final double fraction = percolation.numberOfOpenSites() / (n * n);
-      fractions[experiment] = fraction;
+    }
+    this.trials = trials;
+    treshold = new double[trials];
+    for (int i = 0; i < treshold.length; i++) {
+      treshold[i] = calculateTreshold(n);
     }
   }
 
+  private double calculateTreshold(int n) {
+    double counter = 0;
+    int i, j;
+    Percolation percolation = new Percolation(n);
+    while (!percolation.percolates()) {
+      i = StdRandom.uniform(n);
+      j = StdRandom.uniform(n);
+      if (!percolation.isOpen(i, j)) {
+        counter++;
+        percolation.open(i, j);
+      }
+    }
+    return counter / (n * n);
+  }
+
   public double mean() {
-    return StdStats.mean(fractions);
+    return StdStats.mean(treshold);
   }
 
   public double stddev() {
-    return StdStats.stddev(fractions);
+    return StdStats.stddev(treshold);
   }
 
   public double confidenceLo() {
-    return mean() - ((CONFIDENCE_95 * stddev()) / Math.sqrt(experimentsCount));
+    return mean() - ((CONFIDENCE_95 * stddev()) / Math.sqrt(trials));
   }
 
   public double confidenceHi() {
-    return mean() + ((CONFIDENCE_95 * stddev()) / Math.sqrt(experimentsCount));
+    return mean() + ((CONFIDENCE_95 * stddev()) / Math.sqrt(trials));
   }
 
   public static void main(final String[] args) {
