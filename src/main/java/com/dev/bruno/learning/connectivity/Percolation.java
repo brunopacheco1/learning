@@ -29,44 +29,46 @@ public class Percolation {
     }
 
     int position = arrayPosition(row, col);
+
+    makeUnionWithTopAndBottomSites(row, position);
+    makeUnionWithLeftAndRightSites(col, position);
+
     openSites[position] = true;
+    openSitesCounter++;
+  }
+
+  private void makeUnionWithTopAndBottomSites(int row, int position) {
     if (row == 1) {
       quickUnionUF.union(position, top);
-      if (openSites[position + gridSize])
-        quickUnionUF.union(position, position + gridSize);
     }
 
     if (row == gridSize) {
       quickUnionUF.union(position, bottom);
-      if (openSites[position - gridSize])
-        quickUnionUF.union(position, position - gridSize);
     }
 
-    if (row > 1 && row < gridSize) {
-      if (openSites[position + gridSize])
-        quickUnionUF.union(position, position + gridSize);
-      if (openSites[position - gridSize])
-        quickUnionUF.union(position, position - gridSize);
+    if (row <= gridSize && row > 1) {
+      makeUnion(position, position - gridSize);
     }
 
-    if (col == 1) {
-      if (openSites[position + 1])
-        quickUnionUF.union(position, position + 1);
+    if (row >= 1 && row < gridSize) {
+      makeUnion(position, position + gridSize);
+    }
+  }
+
+  private void makeUnionWithLeftAndRightSites(int col, int position) {
+    if (col >= 1 && col < gridSize) {
+      makeUnion(position, position + 1);
     }
 
-    if (col == gridSize) {
-      if (openSites[position - 1])
-        quickUnionUF.union(position, position - 1);
+    if (col <= gridSize && col > 1) {
+      makeUnion(position, position - 1);
     }
+  }
 
-    if (col > 1 && col < gridSize) {
-      if (openSites[position - 1])
-        quickUnionUF.union(position, position - 1);
-      if (openSites[position + 1])
-        quickUnionUF.union(position, position + 1);
+  private void makeUnion(int position, int otherPosition) {
+    if (openSites[otherPosition]) {
+      quickUnionUF.union(position, otherPosition);
     }
-
-    openSitesCounter++;
   }
 
   private int arrayPosition(int row, int col) {
