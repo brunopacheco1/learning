@@ -1,50 +1,57 @@
-package com.dev.bruno.learning.stacks;
+package com.dev.bruno.learning.queues;
 
 import java.util.Iterator;
 
-public class DynamicCapacityStack<T> implements Stack<T> {
+public class DynamicCapacityQueue<T> implements Queue<T> {
 
     private T[] collection;
-    private int lastIndex;
+    private int head;
+    private int tail;
 
     @SuppressWarnings("unchecked")
-    public DynamicCapacityStack(int initialCapacity) {
+    public DynamicCapacityQueue(int initialCapacity) {
         collection = (T[]) new Object[initialCapacity];
     }
 
     @Override
-    public void push(T value) {
-        if (lastIndex == collection.length) {
+    public void enqueue(T value) {
+        if (tail == collection.length) {
             resize(collection.length * 2);
         }
-        collection[lastIndex] = value;
-        lastIndex++;
+        collection[tail] = value;
+        tail++;
     }
 
     @Override
-    public T pop() {
+    public T dequeue() {
         if (isEmpty())
             return null;
-        if (lastIndex > 0 && lastIndex == collection.length / 4) {
+        if (tail > head && tail == collection.length / 4) {
             resize(collection.length / 2);
         }
-        T value = collection[lastIndex];
-        collection[lastIndex] = null;
-        lastIndex--;
+        T value = collection[head];
+        collection[head] = null;
+        head++;
+        if (head == tail) {
+            head = 0;
+            tail = 0;
+        }
         return value;
     }
 
     @Override
     public boolean isEmpty() {
-        return lastIndex == 0;
+        return head == tail;
     }
 
     @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         var copy = (T[]) new Object[newCapacity];
-        for (int i = 0; i < lastIndex; i++) {
-            copy[i] = collection[i];
+        for (int i = head; i < tail; i++) {
+            copy[i - head] = collection[i];
         }
+        tail = tail - head;
+        head = 0;
         collection = copy;
     }
 
@@ -60,7 +67,7 @@ public class DynamicCapacityStack<T> implements Stack<T> {
 
     @Override
     public T next() {
-        return pop();
+        return dequeue();
     }
 
     public static void main(String[] args) {

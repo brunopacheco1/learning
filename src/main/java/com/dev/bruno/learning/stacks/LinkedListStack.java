@@ -1,19 +1,24 @@
 package com.dev.bruno.learning.stacks;
 
-public class LinkedListStack {
+import java.util.Iterator;
+
+public class LinkedListStack<T> implements Stack<T> {
 
     private Node first;
 
     public LinkedListStack() {
     }
 
-    public void push(String value) {
+    @Override
+    public void push(T value) {
         first = new Node(value, first);
     }
 
-    public String pop() {
-        if(isEmpty()) return null;
-        String value = first.value;
+    @Override
+    public T pop() {
+        if (isEmpty())
+            return null;
+        T value = first.value;
         first = first.next;
         return value;
     }
@@ -23,14 +28,29 @@ public class LinkedListStack {
     }
 
     private class Node {
-        String value;
+        T value;
 
         Node next;
 
-        Node(String value, Node next) {
+        Node(T value, Node next) {
             this.value = value;
             this.next = next;
         }
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !isEmpty();
+    }
+
+    @Override
+    public T next() {
+        return pop();
     }
 
     public static void main(String[] args) {

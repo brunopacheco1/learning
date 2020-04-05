@@ -1,13 +1,16 @@
 package com.dev.bruno.learning.queues;
 
-public class LinkedListQueue {
+import java.util.Iterator;
+
+public class LinkedListQueue<T> implements Queue<T> {
 
     private Node first, last;
 
     public LinkedListQueue() {
     }
 
-    public void enqueue(String value) {
+    @Override
+    public void enqueue(T value) {
         Node node = new Node(value);
         if (isEmpty()) {
             first = node;
@@ -18,30 +21,47 @@ public class LinkedListQueue {
         }
     }
 
-    public String dequeue() {
+    @Override
+    public T dequeue() {
         if (isEmpty())
             return null;
-        String value = first.value;
+        T value = first.value;
         first = first.next;
         if (isEmpty())
             last = null;
         return value;
     }
 
+    @Override
     public boolean isEmpty() {
         return first == null;
     }
 
     private class Node {
-        String value;
+        T value;
 
         Node next;
 
-        Node(String value) {
+        Node(T value) {
             this.value = value;
         }
     }
 
     public static void main(String[] args) {
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !isEmpty();
+    }
+
+    @Override
+    public T next() {
+        return dequeue();
     }
 }

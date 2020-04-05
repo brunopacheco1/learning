@@ -1,28 +1,50 @@
 package com.dev.bruno.learning.stacks;
 
-public class FixedCapacityStack {
+import java.util.Iterator;
 
-    private String [] collection;
+public class FixedCapacityStack<T> implements Stack<T> {
+
+    private T[] collection;
     private int lastIndex;
 
+    @SuppressWarnings("unchecked")
     public FixedCapacityStack(int N) {
-        collection = new String[N];
+        collection = (T[]) new Object[N];
     }
 
-    public void push(String value) {
+    @Override
+    public void push(T value) {
         collection[lastIndex] = value;
     }
 
-    public String pop() {
-        if(isEmpty()) return null;
-        String value = collection[lastIndex];
+    @Override
+    public T pop() {
+        if (isEmpty())
+            return null;
+        T value = collection[lastIndex];
         collection[lastIndex] = null;
         lastIndex--;
         return value;
     }
 
+    @Override
     public boolean isEmpty() {
         return lastIndex == 0;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !isEmpty();
+    }
+
+    @Override
+    public T next() {
+        return pop();
     }
 
     public static void main(String[] args) {
