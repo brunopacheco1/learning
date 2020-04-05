@@ -1,10 +1,10 @@
 package com.dev.bruno.learning.stacks;
 
-public class LinkedStack {
+public class LinkedListStack {
 
     private Node first;
 
-    public LinkedStack() {
+    public LinkedListStack() {
     }
 
     public void push(String value) {
