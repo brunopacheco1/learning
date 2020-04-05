@@ -3,10 +3,7 @@ package com.dev.bruno.learning.test.a1;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /*
@@ -34,43 +31,43 @@ Example:
 public class BackupSystem {
 
 	private static class Batch {
-	    int[] fileSizes;
-	    int tapeSize;
-	    
-	    public Batch(int [] fileSizes, int tapeSize) {
-	    	this.fileSizes = fileSizes;
-	    	this.tapeSize = tapeSize;
-	    }
-	    
-	    public int[] getFileSizes() {
+		int[] fileSizes;
+		int tapeSize;
+
+		public Batch(int[] fileSizes, int tapeSize) {
+			this.fileSizes = fileSizes;
+			this.tapeSize = tapeSize;
+		}
+
+		public int[] getFileSizes() {
 			return fileSizes;
 		}
-	    
-	    public int getTapeSize() {
+
+		public int getTapeSize() {
 			return tapeSize;
 		}
 	}
-	
+
 	public static int getMinimumTapeCount(final Batch batch) {
-        int [] sorted = Arrays.stream(batch.getFileSizes()).sorted().toArray();
-        int [] tapes = new int[sorted.length];
-        int [] tapeFileCounter = new int[sorted.length];
+		int[] sorted = Arrays.stream(batch.getFileSizes()).sorted().toArray();
+		int[] tapes = new int[sorted.length];
+		int[] tapeFileCounter = new int[sorted.length];
 
-        for(int i = sorted.length - 1; i >= 0; i--) {
-            for(int tapeIndex = 0; tapeIndex < tapes.length; tapeIndex++) {
-                int sum = tapes[tapeIndex] + sorted[i];
+		for (int i = sorted.length - 1; i >= 0; i--) {
+			for (int tapeIndex = 0; tapeIndex < tapes.length; tapeIndex++) {
+				int sum = tapes[tapeIndex] + sorted[i];
 
-                if(sum <= batch.getTapeSize() && tapeFileCounter[tapeIndex] < 2) {
-                    tapes[tapeIndex] = sum;
-                    tapeFileCounter[tapeIndex] += 1;
-                    break;
-                }
-            }
-        }
+				if (sum <= batch.getTapeSize() && tapeFileCounter[tapeIndex] < 2) {
+					tapes[tapeIndex] = sum;
+					tapeFileCounter[tapeIndex] += 1;
+					break;
+				}
+			}
+		}
 
-        return IntStream.of(tapes).filter(tape -> tape > 0).toArray().length;
+		return IntStream.of(tapes).filter(tape -> tape > 0).toArray().length;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		Scanner in = new Scanner(Paths.get("inputs/input_delivery.txt"));
 
@@ -82,13 +79,13 @@ public class BackupSystem {
 		for (int i = 0; i < numberOfPackages; i++) {
 			fileSizes[i] = in.nextInt();
 		}
-		
+
 		Batch batch = new Batch(fileSizes, tapeSize);
 
 		int minimumTapeCount = getMinimumTapeCount(batch);
 
 		System.out.println(minimumTapeCount);
-		
+
 		in.close();
 	}
 }

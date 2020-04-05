@@ -6,28 +6,40 @@ import java.util.Stack;
 
 public class BalancedBracketsSolution {
 
-	private static boolean balancedBrackets(String sample) {
-		Stack<Character> bracketsStack = new Stack<>();
-		
-		for(Character c : sample.toCharArray()) {
+	private final Stack<Character> bracketsStack = new Stack<>();
+
+	public boolean balancedBrackets(String sample) {
+		for (char c : sample.toCharArray()) {
 			switch (c) {
 				case '[':
 				case '(':
-				case '{': bracketsStack.push(c); break;
-				case ']': if(bracketsStack.isEmpty() || bracketsStack.pop() != '[') return false;
-				case ')': if(bracketsStack.isEmpty() || bracketsStack.pop() != '(') return false;
-				case '}': if(bracketsStack.isEmpty() || bracketsStack.pop() != '{') return false;
+				case '{':
+					bracketsStack.push(c);
+					continue;
+				case ']':
+					if (isNotBalanced('['))
+						return false;
+				case ')':
+					if (isNotBalanced('('))
+						return false;
+				case '}':
+					if (isNotBalanced('{'))
+						return false;
 			}
 		}
 
 		return bracketsStack.isEmpty();
 	}
-	
+
+	private boolean isNotBalanced(char open) {
+		return bracketsStack.isEmpty() || bracketsStack.pop() != open;
+	}
+
 	public static void main(String[] args) throws Exception {
-		Files.lines(Paths.get("./inputs/input09.txt")).forEach(line -> {
-			boolean balanced = balancedBrackets(line);
-			
-			if(balanced) {
+		BalancedBracketsSolution balancedBrackets = new BalancedBracketsSolution();
+
+		Files.lines(Paths.get("inputs/input09.txt")).forEach(line -> {
+			if (balancedBrackets.balancedBrackets(line)) {
 				System.out.println("YES");
 			} else {
 				System.out.println("NO");
