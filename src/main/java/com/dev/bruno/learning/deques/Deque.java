@@ -5,15 +5,11 @@ import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
-    private static final int INITIAL_SIZE = 32;
     private Item[] collection;
     private int head, tail;
 
-    @SuppressWarnings("unchecked")
     public Deque() {
-        collection = (Item[]) new Object[INITIAL_SIZE];
-        tail = INITIAL_SIZE / 2;
-        head = tail - 1;
+        collection = (Item[]) new Object[1];
     }
 
     public boolean isEmpty() {
@@ -43,16 +39,13 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void resize(final int newSize) {
-        if (newSize < INITIAL_SIZE) {
-            return;
-        }
         final int currentSize = size();
         final int shift = (newSize - currentSize) / 2;
         final Item[] copy = (Item[]) new Object[newSize];
-        for (int index = head + 1, copyIndex = shift; index < tail; index++, copyIndex++) {
-            copy[copyIndex] = collection[index];
+        int copyIndex = shift;
+        for (int index = head + 1; index < tail; index++) {
+            copy[copyIndex++] = collection[index];
         }
         head = shift - 1;
         tail = shift + currentSize;
@@ -84,22 +77,18 @@ public class Deque<Item> implements Iterable<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return new DequeIterator(collection, head + 1, tail - 1);
+        return new DequeIterator(head + 1);
     }
 
     private class DequeIterator implements Iterator<Item> {
-        private Item[] collection;
-        private int head;
-        private int tail;
+        private int currentIndex;
 
-        DequeIterator(Item[] collection, int head, int tail) {
-            this.collection = collection;
-            this.head = head;
-            this.tail = tail;
+        DequeIterator(int currentIndex) {
+            this.currentIndex = currentIndex;
         }
 
         public boolean hasNext() {
-            return head < tail;
+            return currentIndex < tail;
         }
 
         public void remove() {
@@ -110,7 +99,23 @@ public class Deque<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return collection[head++];
+            return collection[currentIndex++];
         }
+    }
+
+    public static void main(final String[] args) {
+        final Deque<String> deque = new Deque<>();
+        for (int i = 0; i < 200; i++) {
+            deque.addFirst(i + "_test");
+            deque.addLast(i + "_test");
+        }
+        for (String item : deque) {
+            System.out.println(item);
+        }
+        for (int i = 0; i < 100; i++) {
+            deque.removeFirst();
+            deque.removeLast();
+        }
+        System.out.println();
     }
 }

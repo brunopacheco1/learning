@@ -7,15 +7,12 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private static final int INITIAL_CAPACITY = 32;
-
     private Item[] collection;
     private int tail;
     private int size;
 
-    @SuppressWarnings("unchecked")
     public RandomizedQueue() {
-        collection = (Item[]) new Object[INITIAL_CAPACITY];
+        collection = (Item[]) new Object[1];
     }
 
     public void enqueue(Item value) {
@@ -29,9 +26,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NoSuchElementException();
         }
         doResizeIfNecessary();
-        int index = StdRandom.uniform(tail);
-        Item item = collection[index];
-        collection[index] = null;
+        Item item = null;
+        while (item == null) {
+            int index = StdRandom.uniform(tail);
+            item = collection[index];
+            collection[index] = null;
+        }
         size--;
         if (size == 0) {
             tail = 0;
@@ -43,14 +43,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new NoSuchElementException();
         }
-        return collection[StdRandom.uniform(tail)];
+        Item item = null;
+        while (item == null) {
+            item = collection[StdRandom.uniform(tail)];
+        }
+        return item;
     }
 
     public boolean isEmpty() {
         return size() == 0;
     }
 
-    private int size() {
+    public int size() {
         return size;
     }
 
@@ -59,12 +63,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             resize(collection.length);
         } else if (tail == collection.length) {
             resize(collection.length * 2);
-        } else if (size() == collection.length / 4) {
+        } else if (size() > 0 && size() == collection.length / 4) {
             resize(collection.length / 2);
         }
     }
 
-    @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         var copy = (Item[]) new Object[newCapacity];
         int newTail = 0;
@@ -79,17 +82,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return new RandomizedQueueIterator(collection, size);
+        return new RandomizedQueueIterator();
     }
 
     private class RandomizedQueueIterator implements Iterator<Item> {
 
-        private Item[] collection;
+        private final Item[] copy;
         private final int[] indices;
         private int currentIndex = 0;
 
-        public RandomizedQueueIterator(Item[] collection, int size) {
-            this.collection = collection;
+        RandomizedQueueIterator() {
+            this.copy = (Item[]) new Object[size];
+            int newTail = 0;
+            for (int i = 0; i < tail; i++) {
+                if (collection[i] != null) {
+                    this.copy[newTail++] = collection[i];
+                }
+            }
             this.indices = new int[size];
             for (int i = 0; i < size; i++) {
                 indices[i] = i;
@@ -109,7 +118,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            return collection[indices[currentIndex++]];
+            return this.copy[indices[currentIndex++]];
         }
+    }
+
+    public static void main(String[] args) {
+        final RandomizedQueue<String> queue = new RandomizedQueue<>();
+        for (int i = 0; i < 2000; i++) {
+            queue.enqueue(i + "_test");
+            queue.enqueue(i + "_test");
+            queue.dequeue();
+        }
+        int counter = 0;
+        for (String item : queue) {
+            System.out.println(item);
+            System.out.println(++counter);
+        }
+        for (int i = 0; i < 2000; i++) {
+            queue.dequeue();
+        }
+        queue.enqueue("final_test");
+        System.out.println();
     }
 }
