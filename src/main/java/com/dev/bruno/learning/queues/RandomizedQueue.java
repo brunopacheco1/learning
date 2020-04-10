@@ -11,6 +11,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int tail;
     private int size;
 
+    @SuppressWarnings("unchecked")
     public RandomizedQueue() {
         collection = (Item[]) new Object[1];
     }
@@ -68,6 +69,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         var copy = (Item[]) new Object[newCapacity];
         int newTail = 0;
@@ -91,6 +93,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private final int[] indices;
         private int currentIndex = 0;
 
+        @SuppressWarnings("unchecked")
         RandomizedQueueIterator() {
             this.copy = (Item[]) new Object[size];
             int newTail = 0;

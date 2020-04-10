@@ -8,6 +8,7 @@ public class Deque<Item> implements Iterable<Item> {
     private Item[] collection;
     private int head, tail;
 
+    @SuppressWarnings("unchecked")
     public Deque() {
         collection = (Item[]) new Object[2];
         tail = 1;
@@ -40,6 +41,7 @@ public class Deque<Item> implements Iterable<Item> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void resize(final int newSize) {
         final int currentSize = size();
         final int shift = (newSize - currentSize) / 2;
