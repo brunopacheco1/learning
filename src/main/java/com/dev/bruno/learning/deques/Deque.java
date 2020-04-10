@@ -9,7 +9,8 @@ public class Deque<Item> implements Iterable<Item> {
     private int head, tail;
 
     public Deque() {
-        collection = (Item[]) new Object[1];
+        collection = (Item[]) new Object[2];
+        tail = 1;
     }
 
     public boolean isEmpty() {
