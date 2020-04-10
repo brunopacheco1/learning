@@ -2,7 +2,6 @@ package com.dev.bruno.learning.deques;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.stream.IntStream;
 
 public class Deque<Item> implements Iterable<Item> {
 
@@ -85,19 +84,33 @@ public class Deque<Item> implements Iterable<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        return null;
+        return new DequeIterator(collection, head + 1, tail - 1);
     }
 
-    public static void main(final String[] args) {
-        final Deque<String> deque = new Deque<>();
-        IntStream.range(0, 100).forEach(i -> {
-            deque.addFirst(i + "_test");
-            deque.addLast(i + "_test");
-        });
-        IntStream.range(0, 100).forEach(i -> {
-            deque.removeFirst();
-            deque.removeLast();
-        });
-        System.out.println();
+    private class DequeIterator implements Iterator<Item> {
+        private Item[] collection;
+        private int head;
+        private int tail;
+
+        DequeIterator(Item[] collection, int head, int tail) {
+            this.collection = collection;
+            this.head = head;
+            this.tail = tail;
+        }
+
+        public boolean hasNext() {
+            return head < tail;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Item next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return collection[head++];
+        }
     }
 }
