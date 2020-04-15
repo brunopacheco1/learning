@@ -16,7 +16,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         collection = (Item[]) new Object[1];
     }
 
-    public void enqueue(Item value) {
+    public void enqueue(final Item value) {
         doResizeIfNecessary();
         collection[tail++] = value;
         size++;
@@ -29,7 +29,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         doResizeIfNecessary();
         Item item = null;
         while (item == null) {
-            int index = StdRandom.uniform(tail);
+            final int index = StdRandom.uniform(tail);
             item = collection[index];
             collection[index] = null;
         }
@@ -70,8 +70,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     @SuppressWarnings("unchecked")
-    private void resize(int newCapacity) {
-        var copy = (Item[]) new Object[newCapacity];
+    private void resize(final int newCapacity) {
+        final var copy = (Item[]) new Object[newCapacity];
         int newTail = 0;
         for (int i = 0; i < tail; i++) {
             if (collection[i] != null) {
@@ -125,7 +125,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         final RandomizedQueue<String> queue = new RandomizedQueue<>();
         for (int i = 0; i < 2000; i++) {
             queue.enqueue(i + "_test");
@@ -133,7 +133,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             queue.dequeue();
         }
         int counter = 0;
-        for (String item : queue) {
+        for (final String item : queue) {
             System.out.println(item);
             System.out.println(++counter);
         }

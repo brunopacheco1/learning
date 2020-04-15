@@ -9,12 +9,12 @@ public class DynamicCapacityQueue<T> implements Queue<T> {
     private int tail;
 
     @SuppressWarnings("unchecked")
-    public DynamicCapacityQueue(int initialCapacity) {
+    public DynamicCapacityQueue(final int initialCapacity) {
         collection = (T[]) new Object[initialCapacity];
     }
 
     @Override
-    public void enqueue(T value) {
+    public void enqueue(final T value) {
         if (tail == collection.length) {
             resize(collection.length * 2);
         }
@@ -29,7 +29,7 @@ public class DynamicCapacityQueue<T> implements Queue<T> {
         if (tail > head && tail == collection.length / 4) {
             resize(collection.length / 2);
         }
-        T value = collection[head];
+        final T value = collection[head];
         collection[head] = null;
         head++;
         if (head == tail) {
@@ -45,8 +45,8 @@ public class DynamicCapacityQueue<T> implements Queue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private void resize(int newCapacity) {
-        var copy = (T[]) new Object[newCapacity];
+    private void resize(final int newCapacity) {
+        final var copy = (T[]) new Object[newCapacity];
         for (int i = head; i < tail; i++) {
             copy[i - head] = collection[i];
         }
@@ -70,6 +70,6 @@ public class DynamicCapacityQueue<T> implements Queue<T> {
         return dequeue();
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
     }
 }
