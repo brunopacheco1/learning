@@ -2,13 +2,11 @@ package com.dev.bruno.learning.sorting;
 
 import edu.princeton.cs.algs4.StdRandom;
 
-public class Shuffle implements Sort {
+public class Shuffle extends AbstractSort {
 
-    @Override
-    public void sort(Comparable[] array) {
+    public static void sort(final Object[] array) {
         for (int i = 0; i < array.length; i++) {
-            int r = StdRandom.uniform(i + 1);
-            exchange(array, i, r);
+            exchange(array, i, StdRandom.uniform(i + 1));
         }
     }
 }

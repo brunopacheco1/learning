@@ -1,13 +1,14 @@
 package com.dev.bruno.learning.sorting;
 
-public class Selection implements Sort {
+import java.util.Comparator;
 
-    @Override
-    public void sort(Comparable[] array) {
+public class Selectionsort extends AbstractSort {
+
+    public static <T> void sort(final T[] array, final Comparator<T> comparator) {
         for (int i = 0; i < array.length; i++) {
             int min = i;
             for (int j = i + 1; j < array.length; j++) {
-                if (less(array[j], array[min])) {
+                if (less(array[j], array[min], comparator)) {
                     min = j;
                 }
             }

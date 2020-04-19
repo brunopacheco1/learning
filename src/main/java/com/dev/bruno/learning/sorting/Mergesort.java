@@ -1,20 +1,23 @@
 package com.dev.bruno.learning.sorting;
 
-public class Mergesort implements Sort {
+import java.util.Comparator;
 
-    @Override
-    public void sort(Comparable[] array) {
-        var aux = new Comparable[array.length];
-        sort(array, aux, 0, array.length - 1);
+public class Mergesort extends AbstractSort {
+
+    @SuppressWarnings("unchecked")
+    public static <T> void sort(final T[] array, final Comparator<T> comparator) {
+        final T[] aux = (T[]) new Object[array.length];
+        sort(array, aux, 0, array.length - 1, comparator);
     }
 
-    private void sort(Comparable[] array, Comparable[] aux, int low, int high) {
+    private static <T> void sort(final T[] array, final T[] aux, final int low, final int high,
+            final Comparator<T> comparator) {
         if (low >= high) {
             return;
         }
-        int mid = low + (high - low) / 2;
-        sort(array, aux, low, mid);
-        sort(array, aux, mid + 1, high);
-        merge(array, aux, low, mid, high);
+        final int mid = low + (high - low) / 2;
+        sort(array, aux, low, mid, comparator);
+        sort(array, aux, mid + 1, high, comparator);
+        merge(array, aux, low, mid, high, comparator);
     }
 }
