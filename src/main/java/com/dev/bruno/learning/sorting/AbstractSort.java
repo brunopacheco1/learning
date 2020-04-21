@@ -1,6 +1,5 @@
 package com.dev.bruno.learning.sorting;
 
-import java.util.Arrays;
 import java.util.Comparator;
 
 public abstract class AbstractSort {
@@ -30,7 +29,7 @@ public abstract class AbstractSort {
                 array[k] = aux[j++];
             } else if (j > high) {
                 array[k] = aux[i++];
-            } else if (less(aux[i], aux[j])) {
+            } else if (less(aux[i], aux[j], comparator)) {
                 array[k] = aux[i++];
             } else {
                 array[k] = aux[j++];
