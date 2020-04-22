@@ -2,7 +2,7 @@ package com.dev.bruno.learning.sorting;
 
 import java.util.Comparator;
 
-public abstract class AbstractSort {
+abstract class AbstractSort {
 
     static <T> boolean less(final T a, final T b, final Comparator<T> comparator) {
         return comparator.compare(a, b) < 0;
@@ -46,5 +46,33 @@ public abstract class AbstractSort {
             }
         }
         return true;
+    }
+
+    static <T> int partition(final T[] array, final int low, final int high, final Comparator<T> comparator) {
+        int i = low;
+        int j = high + 1;
+        while(true) {
+            while(less(array[++i], array[low], comparator)) {
+                if(i == high) {
+                    break;
+                }
+            }
+
+            while(less(array[low], array[--j], comparator)) {
+                if(j == low) {
+                    break;
+                }
+            }
+
+            if(i >= j) {
+                break;
+            }
+
+            exchange(array, i, j);
+        }
+
+        exchange(array, low, j);
+
+        return j;
     }
 }
